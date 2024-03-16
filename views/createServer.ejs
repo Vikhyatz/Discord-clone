@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/60734bdbf3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../stylesheets/createServer.css">
+    <title>Discord Clone | Create Server</title>
+</head>
+
+<body>
+    <!-- back button -->
+    <a id="backBtn" href="/directMessage"><i class="fa-solid fa-arrow-left"></i></a>
+    <!-- back button -->
+
+    <h1 class="head">Vikhyatz, Create Your Server</h1>
+    <p class="subHead">Give your new server a personality with new name. You can never change it later</p>
+    <form action="/createserver" method="post">
+        <p class="inpLabel">SERVER NAME</p>
+        <input id="serverInp" type="text" name="serverName" placeholder="Your new server's name">
+        <p class="info">By creating a server, you agree to Discord clone's <a href="/communityGuide">Community
+                Guidelines</a></p>
+        <button id="createBtn" disabled type="submit">Create Server</button>
+    </form>
+</body>
+<script>
+    let serverInp = document.getElementById('serverInp')
+    let createBtn = document.getElementById('createBtn')
+
+    serverInp.addEventListener('input', () => {
+        if (serverInp.value == '') {
+            createBtn.setAttribute('disabled', '')
+        }
+        else {
+            createBtn.removeAttribute('disabled')
+        }
+    })
+</script>
+
+</html>

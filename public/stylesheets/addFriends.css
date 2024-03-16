@@ -1,0 +1,306 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    margin-right: 2px;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 4px;
+    background: #2B2D31;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #1A1B1E;
+    border-radius: 4px;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    background-color: #313338;
+    overflow: hidden;
+}
+
+a {
+    text-decoration: none;
+}
+
+nav {
+    background-color: #1E1F22;
+    width: 72px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.navlist {
+    width: 48px;
+    height: 48px;
+    background-color: #313338;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    transition: 0.3s;
+    color: #DBDEE1;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+#direct i,
+.green i {
+    font-size: 24px;
+}
+
+.activeServer {
+    border-radius: 10px;
+    background-color: #5865F2;
+}
+
+.navlist:hover {
+    border-radius: 10px;
+    background-color: #5865F2;
+}
+
+.line {
+    width: 30px;
+    height: 2px;
+    background-color: #34363B;
+    margin-top: 10px;
+}
+
+.green:hover {
+    background-color: #23A559;
+}
+
+/* direct messages */
+
+#serverNav {
+    width: 240px;
+    height: 100vh;
+    background-color: #2B2D31;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+}
+
+
+#serverNameHead {
+    font-size: 20px;
+    color: white;
+    margin-top: 15px;
+    transform: scaleY(0.94);
+    letter-spacing: 1.5px;
+}
+
+.DMhead {
+    width: 200px;
+    color: #949Ba4;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 20px 10px 10px 10px;
+    cursor: default;
+    margin-bottom: 10px;
+    border-bottom: 1.5px solid #131313;
+    transform: scaleY(0.96);
+}
+
+.DMhead:hover {
+    color: white;
+}
+
+.friends,
+#addFriends {
+    width: 224px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    color: #949Ba4;
+    border-radius: 5px;
+    margin-block: 2px;
+    transition: 0.1s;
+}
+
+#addFriends {
+    margin-top: 10px;
+}
+
+.friends:hover,
+#addFriends:hover {
+    background-color: #3F4248;
+    color: white;
+}
+
+#addFriends p {
+    margin-left: 10px;
+}
+
+#addFriends i {
+    margin-left: 10px;
+}
+
+.active {
+    background-color: #3F4248;
+    color: white;
+}
+
+.img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-left: 10px;
+}
+
+.img img {
+    width: inherit;
+}
+
+.friends p {
+    margin-left: 10px;
+}
+
+
+
+.userInfoDivNav {
+    width: 100%;
+    height: 52px;
+    background-color: #232428;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #f2f3f5;
+}
+
+.userInfoSub {
+    display: flex;
+    align-items: center;
+    transition: .2s;
+    padding: 5px;
+    border-radius: 5px;
+    margin-left: 10px;
+    width: 150px;
+}
+
+.userInfoSub .img {
+    margin-left: 0;
+}
+
+.userInfoSub:hover {
+    background-color: #3c3e44;
+}
+
+.userInfoSub p {
+    margin-left: 10px;
+}
+
+.userInfoDivNav i {
+    margin-right: 20px;
+    padding: 12px;
+    transition: .2s;
+    border-radius: 5px;
+}
+
+.userInfoDivNav i:hover {
+    background-color: #3c3e44;
+}
+
+/* main */
+
+main {
+    width: calc(100% - 312px);
+    position: relative;
+}
+
+#mainNav {
+    width: 100%;
+    height: 45px;
+    background-color: #313338;
+    border-bottom: 1.5px solid #131313;
+    display: flex;
+    align-items: center;
+    color: #2dc770;
+    font-size: 16px;
+}
+
+#mainNav h3 {
+    margin-left: 20px;
+}
+
+.addfriendMain h3 {
+    color: #f2f3f5;
+}
+
+.addfriendMain p {
+    color: #b5bac1;
+}
+
+.addfriendMain {
+    width: 90%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    gap: 20px;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+#friendForm {
+    width: 80%;
+    height: 50px;
+    background-color: #1E1F22;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    border-radius: 10px;
+}
+
+#friendForm input {
+    height: 20px;
+    width: 55%;
+    padding: 10px;
+    font-size: 17px;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    color: white;
+}
+
+#friendForm button {
+    height: 35px;
+    width: 30%;
+    background-color: #5865F2;
+    color: white;
+    border: 0;
+    outline: 0;
+    border-radius: 5px;
+}
+
+#friendForm button:disabled {
+    cursor: not-allowed;
+    background-color: #3B418A;
+    color: grey;
+    border: 0;
+    outline: 0;
+}
+
+#requestStatus {
+    display: none;
+}

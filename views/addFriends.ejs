@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/60734bdbf3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../stylesheets/addFriends.css">
+    <title>Discord Clone | Add Friends</title>
+</head>
+
+<body>
+    <nav>
+        <a href="/directMessage" id="direct" class="navlist"><i class="fa-brands fa-discord"></i></a>
+        <div class="line"></div>
+
+        <% user.joinedServers.forEach(function(servers) { %>
+            <div class="navlist servers" data-id="<%= servers._id %>">
+                <%= servers.serverIcon %>
+            </div>
+            <% }) %>
+
+                <a href="/createServer" id="create" class="navlist green"><i class="fa-brands fa-plus"></i></a>
+                <div class="line"></div>
+                <a href="https://github.com/Vikhyatz" id="github" class="navlist green"><i
+                        class="fa-brands fa-github"></i></a>
+                <a href="/requests" id="notifications" class="navlist green"><i class="fa-solid fa-bell"></i></a>
+    </nav>
+
+    <div id="serverNav">
+
+        <p id="serverNameHead">ADD FRIENDS</p>
+        <p class="DMhead">DIRECT MESSAGES</p>
+        <% user.friends.forEach(function(friend) { %>
+            <div class="friends">
+                <div class="img">
+                    <img src="<%= friend.profilePicture %>" alt="pfp">
+                </div>
+                <p>
+                    <%= friend.username %>
+                </p>
+            </div>
+            <% }) %>
+
+                <div class="userInfoDivNav">
+                    <div class="userInfoSub">
+                        <div class="img">
+                            <img src="<%= user.profilePicture %>" alt="pfp">
+                        </div>
+                        <p>
+                            <%= user.username %>
+                        </p>
+                    </div>
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+    </div>
+
+    <main>
+        <div id="mainNav">
+            <h3 id="mainNavHead"><i class="fa-solid fa-user-group"></i> | Add Friend</h3>
+        </div>
+
+        <div class="addfriendMain">
+            <h3>ADD FRIEND</h3>
+            <p>You can add friends with their Discord usernames.</p>
+            <form id="friendForm" action="/sendFriendRequest" method="post">
+                <input id="friendNameInp" type="text" name="friendName"
+                    placeholder="You can add friends with their Discord usernames">
+                <button id="sendBtn" disabled type="submit">Send Friend Request</button>
+            </form>
+            <h3 id="requestStatus">Wrong Username, try again!!</h3>
+        </div>
+    </main>
+</body>
+<script>
+    let servers = document.querySelectorAll('.servers')
+
+    servers.forEach(server => {
+        server.addEventListener('click', () => {
+            let serverId = server.getAttribute('data-id')
+            console.log(serverId)
+            window.location.href = `/server/?id=${encodeURIComponent(serverId)}`;
+        })
+    })
+
+    // code to disable the button when there is no input
+    let friendNameInp = document.getElementById('friendNameInp')
+    let sendBtn = document.getElementById('sendBtn')
+
+    friendNameInp.addEventListener('input', () => {
+        if (friendNameInp.value == '') {
+            sendBtn.setAttribute('disabled', '')
+        }
+        else {
+            sendBtn.removeAttribute('disabled')
+        }
+    })
+
+
+    // to get the info if the request was submitted or the user doesn't exist
+    let form = document.querySelector('form')
+    let result = document.getElementById('requestStatus')
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const friendName = friendNameInp.value;
+        const response = await fetch('/sendFriendRequest', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ friendName: friendName })
+        });
+
+        const data = await response.json()
+
+        result.innerHTML = data.message
+
+        if (data.message == 'Wrong Username, try again!!') {
+            result.style.display = 'block'
+            result.style.color = 'red'
+        }
+        if (data.message == 'I anticipated this, you cannot send request to yourself bruh..') {
+            result.style.display = 'block'
+            result.style.color = 'red'
+        }
+        else {
+            result.style.display = 'block'
+            result.style.color = 'lime'
+        }
+    })
+
+</script>
+
+</html>

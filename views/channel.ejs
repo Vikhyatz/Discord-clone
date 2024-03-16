@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/60734bdbf3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../stylesheets/channel.css">
+    <title>Discord Clone | <%= server.serverName %>
+    </title>
+</head>
+
+<body>
+    <nav>
+        <a href="/directMessage" id="direct" class="navlist activeServer"><i class="fa-brands fa-discord"></i></a>
+        <div class="line"></div>
+
+        <% user.joinedServers.forEach(function(servers) { %>
+            <div class="navlist servers" data-id="<%= servers._id %>">
+                <%= servers.serverIcon %>
+            </div>
+            <% }) %>
+
+
+                <a href="/createServer" id="create" class="navlist green"><i class="fa-brands fa-plus"></i></a>
+                <div class="line"></div>
+                <a href="https://github.com/Vikhyatz" id="github" class="navlist green"><i
+                        class="fa-brands fa-github"></i></a>
+                <a href="/requests" id="notifications" class="navlist green"><i class="fa-solid fa-bell"></i></a>
+    </nav>
+
+    <div id="serverNav">
+        <p id="serverNameHead">
+            <%= server.serverName %>
+        </p>
+        <a href="/addFriends" id="addFriends">
+            <i class="fa-solid fa-user-group"></i>
+            <p>Add Friends</p>
+        </a>
+        <div id="createChannel" data-server-id="<%= server._id %>" class="DMhead">TEXT CHANNELS <span>+</span></div>
+
+        <% server.channel.forEach(channels=>{ %>
+            <div class="channels" data-server-id="<%= server._id %>" data-channel-id="<%= channels._id %>">
+                <p>#</p>
+                <p>
+                    <%= channels.channelName %>
+                </p>
+            </div>
+            <% }) %>
+
+                <div class="userInfoDivNav">
+                    <div class="userInfoSub">
+                        <div class="img">
+                            <img src="<%= user.profilePicture %>" alt="pfp">
+                        </div>
+                        <p>
+                            <%= user.username %>
+                        </p>
+                    </div>
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+    </div>
+
+    <main>
+        <div id="mainNav">
+            <p id="hash">#</p>
+            <p id="name">
+                <!-- dynamically generated -->
+            </p>
+        </div>
+
+        <div id="allMessages">
+            <div class="welcomeMessage">
+                <div>#</div>
+                <h1 id="introHead">
+                    <!-- dynamically generated -->
+                </h1>
+                <p id="introSubHead">
+                    <!-- dynamically generated -->
+                </p>
+            </div>
+            <!---->
+            <!-- messages are generated dynamically -->
+            <!---->
+        </div>
+
+        <form id="messageInpDiv">
+            <input type="text" name="message" id="messageInp" placeholder="" autocomplete="off">
+            <button id="iconDiv" type="submit">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+    </main>
+
+    <div id="inviting">
+        <button>Invite Link!</button>
+        <div class="dropdown">
+            <input type="text" readonly value="localhost:3000/invite/?serverId=<%= server._id %>">
+            <p>the other user should be strictly logged in beforehand to become the member of this server, if not then
+                he will be redirected to sign in page</p>
+        </div>
+    </div>
+</body>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+    // initialize socket.io
+    const socket = io();
+
+    let allMessages = document.getElementById('allMessages')
+
+    // defining the socket function
+    socket.on('send message', (roomname, senderName, senderPfp, dateTime, input) => {
+        const message = document.createElement('div');
+        message.classList.add('message')
+
+        message.innerHTML = `
+            <div class="img">
+                <img src="${senderPfp}"
+                    alt="pfp">
+            </div>
+
+            <div class="userInfoAndMessage">
+                <div class="userinfo">
+                    <p class="name">${senderName}</p>
+                    <p class="date-time">${dateTime}</p>
+                </div>
+                <div class="mainMessageContent">
+                    ${input}
+                </div>
+            </div>
+        `;
+        allMessages.appendChild(message);
+        allMessages.scrollTo(0, document.body.scrollHeight);
+    });
+
+    // to redirect to the servers
+    let servers = document.querySelectorAll('.servers')
+
+    servers.forEach(server => {
+        server.addEventListener('click', () => {
+            let serverId = server.getAttribute('data-id')
+            console.log(serverId)
+            window.location.href = `/server/?id=${encodeURIComponent(serverId)}`;
+        })
+    })
+
+    let channels = document.querySelectorAll('.channels')
+
+    channels.forEach(channel => {
+        channel.addEventListener('click', () => {
+            let serverId = channel.getAttribute('data-server-id')
+            let channelId = channel.getAttribute('data-channel-id')
+            console.log(serverId)
+            console.log(channelId)
+            window.location.href = `/channel/?serverid=${encodeURIComponent(serverId)}&channelid=${encodeURIComponent(channelId)}`;
+        })
+    })
+
+    // show the current active server
+    let currentServerIcon = `<%= server.serverIcon %>`
+    console.log(currentServerIcon);
+
+    servers.forEach(server => {
+        let serverIcon = server.innerHTML.trim()
+
+        if (serverIcon == currentServerIcon) {
+            server.classList.add('activeServer')
+        }
+    });
+
+    // inititiallizing for the work below
+    let channelId = `<%= channelId %>`
+    let serverId = `<%= serverId %>`
+    console.log(channelId)
+    console.log(serverId)
+
+    let channelName = document.getElementById('name')
+    let introHead = document.getElementById('introHead')
+    let introSubHead = document.getElementById('introSubHead')
+
+    // fetching the current channel info because i cannot get it from the backend for some reason :)
+    axios.get(`/channel/${channelId}/${serverId}`)
+        .then(function (response) {
+            console.log(response)
+
+            const messageInp = document.getElementById('messageInp')
+
+            channelName.innerHTML = response.data.channelName
+            introHead.innerHTML = `Welcome to #${response.data.channelName}!`
+            introSubHead.innerHTML = `This is the start of the #${response.data.channelName} channel`
+            messageInp.setAttribute('placeholder', `message #${response.data.channelName}`)
+
+            // showing active channel with the help of the information of this current  channel
+            let currentChannelId = response.data._id
+
+            channels.forEach(channel => {
+                let channelId = channel.getAttribute('data-channel-id')
+                if (channelId == currentChannelId) {
+                    channel.classList.add('active')
+                }
+            });
+
+            // joining room through socket
+            console.log("roomName:", response.data.roomName)
+            socket.emit('joinRoom', response.data.roomName)
+
+
+            // adding the below code which is connected to socket because of the channel roomname information which is only accessible in this function
+            const form = document.querySelector('form')
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // get the exact date and the time
+                const currentDate = new Date();
+                const day = String(currentDate.getDate()).padStart(2, '0');
+                const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                const year = currentDate.getFullYear();
+                const hours = String(currentDate.getHours()).padStart(2, '0');
+                const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+
+                const channelRoomname = response.data.roomName
+                const senderName = `<%= user.username %>`
+                const senderPfp = `<%= user.profilePicture %>`
+                const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}`;
+                console.log(formattedDateTime);
+
+
+                if (messageInp.value) {
+                    socket.emit('send message', channelRoomname, senderName, senderPfp, formattedDateTime, messageInp.value);
+                    messageInp.value = '';
+                }
+            });
+        })
+
+    // create channel code
+    let createChannelDiv = document.getElementById('createChannel')
+
+    createChannelDiv.addEventListener('click', () => {
+        let serverId = createChannelDiv.getAttribute('data-server-id')
+        console.log(serverId)
+
+        window.location.href = `/createChannel/?serverid=${encodeURIComponent(serverId)}`;
+    })
+</script>
+
+</html>

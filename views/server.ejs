@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/60734bdbf3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../stylesheets/server.css">
+    <title>Discord Clone | <%= server.serverName %>
+    </title>
+</head>
+
+<body>
+    <nav>
+        <a href="/directMessage" id="direct" class="navlist"><i class="fa-brands fa-discord"></i></a>
+        <div class="line"></div>
+
+        <% user.joinedServers.forEach(function(servers) { %>
+            <div class="navlist servers" data-server-id="<%= servers._id %>">
+                <%= servers.serverIcon %>
+            </div>
+            <% }) %>
+
+
+                <a href="/createServer" id="create" class="navlist green"><i class="fa-brands fa-plus"></i></a>
+                <div class="line"></div>
+                <a href="https://github.com/Vikhyatz" id="github" class="navlist green"><i
+                        class="fa-brands fa-github"></i></a>
+                <a href="/requests" id="notifications" class="navlist green"><i class="fa-solid fa-bell"></i></a>
+    </nav>
+
+    <div id="serverNav">
+        <p id="serverNameHead">
+            <%= server.serverName %>
+        </p>
+        <a href="/addFriends" id="addFriends">
+            <i class="fa-solid fa-user-group"></i>
+            <p>Add Friends</p>
+        </a>
+
+        <div id="createChannel" data-server-id="<%= server._id %>" class="DMhead">TEXT CHANNELS</div>
+
+        <% server.channel.forEach(channels=>{ %>
+            <div class="channels" data-server-id="<%= server._id %>" data-channel-id="<%= channels._id %>">
+                <p>#</p>
+                <p>
+                    <%= channels.channelName %>
+                </p>
+            </div>
+            <% }) %>
+
+                <div class="userInfoDivNav">
+                    <div class="userInfoSub">
+                        <div class="img">
+                            <img src="https://cdn.discordapp.com/avatars/724603106700296302/4d6cde241aa4504856dad566b2ff92a5.webp?size=80"
+                                alt="pfp">
+                        </div>
+                        <p>Vikhyatz</p>
+                    </div>
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+    </div>
+
+    <main>
+        <div id="mainNav">
+            <p id="hash">#</p>
+            <p id="name">Choose a channel</p>
+        </div>
+
+        <div id="allMessages">
+            <h1>Welcome to <%= server.serverName %>
+            </h1>
+            <h3>Choose a Channel</h3>
+        </div>
+    </main>
+
+    <div id="inviting">
+        <button>Invite Link!</button>
+        <div class="dropdown">
+            <input type="text" readonly value="localhost:3000/invite/?serverId=<%= server._id %>">
+            <p>the other user should be strictly logged in beforehand to become the member of this server, if not then
+                he will be redirected to sign in page</p>
+        </div>
+    </div>
+
+</body>
+<script>
+
+    let servers = document.querySelectorAll('.servers')
+    servers.forEach(server => {
+        server.addEventListener('click', () => {
+            let serverId = server.getAttribute('data-server-id')
+            console.log(serverId)
+            window.location.href = `/server/?id=${encodeURIComponent(serverId)}`;
+        })
+
+
+    })
+
+    let channels = document.querySelectorAll('.channels')
+    channels.forEach(channel => {
+        channel.addEventListener('click', () => {
+            let serverId = channel.getAttribute('data-server-id')
+            let channelId = channel.getAttribute('data-channel-id')
+            console.log(serverId)
+            console.log(channelId)
+            window.location.href = `/channel/?serverid=${encodeURIComponent(serverId)}&channelid=${encodeURIComponent(channelId)}`;
+        })
+    })
+
+    // show the current active server
+    let currentServerIcon = `<%= server.serverIcon %>`
+    console.log(currentServerIcon);
+
+    servers.forEach(server => {
+        let serverIcon = server.innerHTML.trim()
+
+        if (serverIcon == currentServerIcon) {
+            server.classList.add('activeServer')
+        }
+    });
+
+    // create text channel code and also handling who can create a text channel
+    let currentUser = `<%= user._id %>`
+    let serverOwner = `<%= server.serverOwner %>`
+    console.log(currentUser)
+    console.log(serverOwner)
+
+    let createChannelDiv = document.getElementById('createChannel')
+
+    if (currentUser == serverOwner) {
+        createChannelDiv.innerHTML = `TEXT CHANNELS <span>+</span>`
+        createChannelDiv.addEventListener('click', () => {
+            let serverId = createChannelDiv.getAttribute('data-server-id')
+            console.log(serverId)
+
+            window.location.href = `/createChannel/?serverid=${encodeURIComponent(serverId)}`;
+        })
+    }
+
+
+</script>
+
+</html>

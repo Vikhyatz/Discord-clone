@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/60734bdbf3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../stylesheets/directMessage.css">
+    <title>Discord Clone | Direct Messages</title>
+</head>
+
+<body>
+    <nav>
+        <div id="direct" class="navlist activeServer"><i class="fa-brands fa-discord"></i></div>
+        <div class="line"></div>
+
+        <% user.joinedServers.forEach(function(servers) { %>
+            <div class="navlist servers" data-id="<%= servers._id %>">
+                <%= servers.serverIcon %>
+            </div>
+            <% }) %>
+
+                <a href="/createServer" id="create" class="navlist green"><i class="fa-brands fa-plus"></i></a>
+                <div class="line"></div>
+                <a href="https://github.com/Vikhyatz" id="github" class="navlist green"><i
+                        class="fa-brands fa-github"></i></a>
+                <a href="/requests" id="notifications" class="navlist green"><i class="fa-solid fa-bell"></i></a>
+    </nav>
+
+    <div id="serverNav">
+        <a href="/addFriends" id="addFriends">
+            <i class="fa-solid fa-user-group"></i>
+            <p>Add Friends</p>
+        </a>
+        <p class="DMhead">DIRECT MESSAGES</p>
+
+        <% user.friends.forEach(function(friend) { %>
+            <!-- dynamically generated friends -->
+            <div class="friends">
+                <div class="img">
+                    <img src="<%= friend.profilePicture %>" alt="pfp">
+                </div>
+                <p>
+                    <%= friend.username %>
+                </p>
+            </div>
+            <% }) %>
+
+
+
+                <div class="userInfoDivNav">
+                    <div class="userInfoSub">
+                        <div class="img">
+                            <img src="<%= user.profilePicture %>" alt="pfp">
+                        </div>
+                        <p>
+                            <%= user.username %>
+                        </p>
+                    </div>
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+    </div>
+
+    <main>
+        <div id="mainNav">
+            <div class="img">
+                <img src="https://cdn.discordapp.com/avatars/516140725185019905/2beefad108301a3e35193ee3a64b2178.webp?size=80"
+                    alt="pfp">
+            </div>
+            <p id="name">BeastCodZ</p>
+            <div class="seperation"></div>
+            <p id="username">@BeastCodZ645</p>
+        </div>
+
+        <div id="allMessages">
+            <div class="message">
+                <div class="img">
+                    <img src="https://cdn.discordapp.com/avatars/724603106700296302/4d6cde241aa4504856dad566b2ff92a5.webp?size=80"
+                        alt="pfp">
+                </div>
+
+                <div class="userInfoAndMessage">
+                    <div class="userinfo">
+                        <p class="name">vikhyatz</p>
+                        <p class="date-time">23/09/2023 00:39</p>
+                    </div>
+                    <div class="mainMessageContent">
+                        Oi
+                    </div>
+                </div>
+            </div>
+            <div class="message">
+                <div class="img">
+                    <img src="https://cdn.discordapp.com/avatars/516140725185019905/2beefad108301a3e35193ee3a64b2178.webp?size=80"
+                        alt="pfp">
+                </div>
+
+                <div class="userInfoAndMessage">
+                    <div class="userinfo">
+                        <p class="name">BeastCodZ</p>
+                        <p class="date-time">23/09/2023 00:39</p>
+                    </div>
+                    <div class="mainMessageContent">
+                        Hop
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </div>
+
+        <form id="messageInpDiv">
+            <input type="text" name="message" id="messageInp" placeholder="Message @BeastCodZ" autocomplete="off">
+            <button id="iconDiv" type="submit">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+    </main>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+    // initialize socket.io
+    const socket = io();
+
+
+    let servers = document.querySelectorAll('.servers')
+
+    servers.forEach(server => {
+        server.addEventListener('click', () => {
+            let serverId = server.getAttribute('data-id')
+            console.log(serverId)
+            window.location.href = `/server/?id=${encodeURIComponent(serverId)}`;
+        })
+    })
+
+
+
+</script>
+
+</html>

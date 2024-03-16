@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/60734bdbf3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../stylesheets/requests.css">
+    <title>Discord Clone | Friend Requests</title>
+</head>
+
+<body>
+    <!-- back button -->
+    <a id="backBtn" href="/directMessage"><i class="fa-solid fa-arrow-left"></i></a>
+    <!-- back button -->
+
+    <h1>Pending Friend Requests</h1>
+
+    <div id="requests">
+        <% user.Requests.forEach(request=>{ %>
+
+
+            <div class="request">
+                <div id="userInfo">
+                    <div class="img">
+                        <img src="<%= request.profilePicture %>" alt="pfp">
+                    </div>
+                    <p>
+                        <%= request.username %>
+                    </p>
+                </div>
+                <div class="buttons">
+                    <button class="accept" data-senderId="<%= request._id %>" id="accept">ACCEPT</button>
+                    <button class="decline" data-senderId="<%= request._id %>" id="decline">DECLINE</button>
+                </div>
+            </div>
+            <% }) %>
+    </div>
+</body>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script>
+
+    let acceptBtns = document.querySelectorAll('.accept')
+
+    acceptBtns.forEach(button => {
+        button.addEventListener('click', () => {
+            const senderId = button.getAttribute('data-senderId')
+
+            axios.post(`/acceptRequest/${senderId}`)
+                .then(function (response) {
+                    console.log(response);
+                    // Redirect to '/requests' after successful request
+                })
+
+            setTimeout(() => {
+                window.location.href = '/directMessage';
+            }, 1000);
+        })
+    })
+
+    let declineBtns = document.querySelectorAll('.decline')
+
+    declineBtns.forEach(button => {
+        button.addEventListener('click', () => {
+            const senderId = button.getAttribute('data-senderId')
+
+            axios.post(`/declineRequest/${senderId}`)
+                .then(function (response) {
+                    console.log(response);
+                    // Redirect to '/requests' after successful request
+                })
+
+            setTimeout(() => {
+                window.location.href = '/directMessage';
+            }, 1000);
+        })
+    })
+
+</script>
+
+</html>
